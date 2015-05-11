@@ -1,3 +1,6 @@
+import math
+
+
 class ShapeException(Exception):
     pass
 
@@ -6,14 +9,12 @@ def shape_vectors(matrix):
     """shape should take a vector or matrix and return a tuple with the
     number of rows (for a vector) or the number of rows and columns
     (for a matrix.)"""
-    # length = len(vector)
-    # return (length, )
+
     if isinstance(matrix[0], int):
         return (len(matrix), )
 
     else:
         return (len(matrix[0]), len(matrix))
-#print(shape_vectors(q))
 
 
 def vector_add(vector1, vector2):
@@ -25,9 +26,14 @@ def vector_add(vector1, vector2):
     # list = []
     # for i in range(len(vector1))
     #  return list.append(vector1[i] + vector2[i])
+    vector_add_checks_shapes(vector1, vector2)
 
     return [vector1[i] + vector2[i] for i in range(len(vector1))]
 
+def vector_add_checks_shapes(vector1, vector2):
+    """Shape rule: the vectors must be the same size."""
+    if shape_vectors(vector1) != shape_vectors(vector2):
+        raise (ShapeException)
 
 def vector_sub(vector1, vector2):
     """
@@ -91,9 +97,70 @@ def magnitude(vector):
 
     magnitude(Vector) = Scalar
     """
-    assert magnitude(m) == 5
-    assert magnitude(v) == math.sqrt(10)
-    assert magnitude(y) == math.sqrt(1400)
-    assert magnitude(z) == 0
 
-    return [ for vector[i]]
+    return math.sqrt(sum([num * num for num in vector]))
+
+
+def shape_matrices(matrix):
+    """shape should take a vector or matrix and return a tuple with the
+    number of rows (for a vector) or the number of rows and columns
+    (for a matrix.)"""
+
+    return  (len(matrix), len(matrix[0]))
+
+def matrix_row(matrix, row):
+    """
+           0 1  <- rows
+       0 [[a b]]
+       1 [[c d]]
+       ^
+     columns
+    """
+    return matrix[row]
+
+def matrix_col(matrix, column):
+    """
+           0 1  <- rows
+       0 [[a b]]
+       1 [[c d]]
+       ^
+     columns
+    """
+
+    return [matrix[x][column] for x in range(len(matrix))]
+
+
+def matrix_scalar_multiply(matrix, scalar):
+    """
+    [[a b]   *  Z   =   [[a*Z b*Z]
+     [c d]]              [c*Z d*Z]]
+
+    Matrix * Scalar = Matrix
+    """
+
+    return [vector_multiply(matrix[i], scalar) for i in range(len(matrix))]
+
+def matrix_vector_multiply(matrix, vector):
+    """
+    [[a b]   *  [x   =   [a*x+b*y
+     [c d]       y]       c*x+d*y
+     [e f]                e*x+f*y]
+
+    Matrix * Vector = Vector
+    """
+
+    return [dot(matrix[i], vector) for i in range(len(matrix))]
+
+#def matrix_matrix_multiply(matrix1, matrix2):
+    """
+    [[a b]   *  [[w x]   =   [[a*w+b*y a*x+b*z]
+     [c d]       [y z]]       [c*w+d*y c*x+d*z]
+     [e f]                    [e*w+f*y e*x+f*z]]
+
+    Matrix * Matrix = Matrix
+    """
+
+    # return [matrix_vector_multiply(matrix1, matrix2[i][x]) for i in \
+    #         range(len(matrix2))]
+    #         #[matrix[i][x] for x in range(len(matrix))]
+    #return [matrix_vector_multiply(matrix1, [matrix2[x][column] for x in range(len(matrix1))])]
