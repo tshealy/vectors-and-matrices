@@ -35,6 +35,7 @@ def vector_add_checks_shapes(vector1, vector2):
     if shape_vectors(vector1) != shape_vectors(vector2):
         raise (ShapeException)
 
+
 def vector_sub(vector1, vector2):
     """
     [a b]  - [c d]  = [a-c b-d]
@@ -46,8 +47,14 @@ def vector_sub(vector1, vector2):
     # for i in range(len(vector1))
     #  return list.append(vector1[i] - vector2[i])
 
+    vector_sub_checks_shapes(vector1, vector2)
+
     return [vector1[i] - vector2[i] for i in range(len(vector1))]
 
+def vector_sub_checks_shapes(vector1, vector2):
+     """Shape rule: the vectors must be the same size."""
+     if shape_vectors(vector1) != shape_vectors(vector2):
+         raise (ShapeException)
 
 def vector_sum(*vectors):
     """vector_sum can take any number of vectors and add them together."""
@@ -56,6 +63,7 @@ def vector_sum(*vectors):
     for vec in vectors[1:]:
         sum = vector_add(sum, vec)
     return sum
+
 #recursive version
     # if len(vector) = 1:
     #     return vector[0]
@@ -151,7 +159,8 @@ def matrix_vector_multiply(matrix, vector):
 
     return [dot(matrix[i], vector) for i in range(len(matrix))]
 
-#def matrix_matrix_multiply(matrix1, matrix2):
+
+def matrix_matrix_multiply(matrix1, matrix2):
     """
     [[a b]   *  [[w x]   =   [[a*w+b*y a*x+b*z]
      [c d]       [y z]]       [c*w+d*y c*x+d*z]
@@ -160,7 +169,11 @@ def matrix_vector_multiply(matrix, vector):
     Matrix * Matrix = Matrix
     """
 
-    # return [matrix_vector_multiply(matrix1, matrix2[i][x]) for i in \
-    #         range(len(matrix2))]
-    #         #[matrix[i][x] for x in range(len(matrix))]
-    #return [matrix_vector_multiply(matrix1, [matrix2[x][column] for x in range(len(matrix1))])]
+    return [[sum(a*b for a,b in zip(matrix1_row, matrix2_col)) \
+    for matrix2_col in zip(*matrix2)] for matrix1_row in matrix1]
+
+    """I used
+    http://www.programiz.com/python-programming/examples/multiply-matrix
+    to help answer solve this one. I am still trying to figure out
+    the zip and zip(*matrix2) pieces.
+    """
